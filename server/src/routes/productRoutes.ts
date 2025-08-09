@@ -1,11 +1,11 @@
-// src/routes/categoryRoutes.ts
+// src/routes/productRoutes.ts
 import { Router } from 'express';
 import * as productController from '../controllers/productController';
 
 const router = Router();
 
 router.post('/', productController.createProductHandler);
-router.get('/', productController.getAllProductsHandler);
+router.get('/', productController.getProductsHandler);
 router.get('/:id', productController.getProductHandler);
 router.put('/:id', productController.updateProductHandler);
 router.delete('/:id', productController.deleteProductHandler);

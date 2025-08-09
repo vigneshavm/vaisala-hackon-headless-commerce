@@ -18,6 +18,10 @@ export const getUserById = async (id: string) => {
   return await User.findById(id);
 };
 
+export const getUserByEmail = async (email: string) => {
+  return await User.findOne({ email });
+};
+
 export const getUserByAuthId = async (authId: string) => {
   return await User.findOne({ authId });
 };

@@ -13,12 +13,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Adjust this to your frontend URL
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get('/', (_, res) => res.send('API running'));
 
-app.use('/apiusers', userRoutes);
+app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

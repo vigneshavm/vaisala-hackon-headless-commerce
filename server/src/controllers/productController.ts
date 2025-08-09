@@ -1,6 +1,7 @@
 // src/controllers/productController.ts
 import { Request, Response } from 'express';
 import * as productService from '../services/productService';
+import * as categoryService from '../services/categoryService';
 
 export const createProductHandler = async (req: Request, res: Response) => {
   try {
@@ -21,12 +22,32 @@ export const getProductHandler = async (req: Request, res: Response) => {
   }
 };
 
+export const getProductsHandler = async (req: Request, res: Response) => {
+  try {
+    const { search, category, sortBy, sortOrder, page, limit } = req.query;
+
+    const products = await productService.getProducts({
+      search: search as string | undefined,
+      category: category as string | undefined,
+      sortBy: sortBy as 'price' | 'name' | 'createdAt' | undefined,
+      sortOrder: sortOrder as 'asc' | 'desc' | undefined,
+      page: page ? parseInt(page as string, 10) : undefined,
+      limit: limit ? parseInt(limit as string, 10) : undefined,
+    });
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+// Optional: If you want to return all products + categories together
 export const getAllProductsHandler = async (_req: Request, res: Response) => {
   try {
-    const products = await productService.getAllProducts();
+    const products = await productService.getProducts();
+    const categories = await categoryService.getAllCategories();
 
-    console.log(products,"products")
-    res.json({products:products,categories:products});
+    res.json({ products, categories });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
