@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCategories } from "../api/categoryApi";
+import { getProducts } from "../api/productApi";
 import { useNavigate } from "react-router-dom";
 
 interface Category {
@@ -16,15 +17,21 @@ interface Product {
   image: string;
 }
 
+export interface RawProduct {
+  _id: string;
+  name: string;
+  price: number;
+  category: {
+    _id: string;
+    name: string;
+  };
+  images: string[];
+  // other fields from API if needed
+}
+
 interface CartItem extends Product {
   quantity: number;
 }
-
-const categoriesData: Category[] = [
-  { id: 1, name: "Mobiles" },
-  { id: 2, name: "Laptops" },
-  { id: 3, name: "Headphones" },
-];
 
 const productsData: Product[] = [
   {
@@ -61,8 +68,9 @@ const productsData: Product[] = [
   },
 ];
 
+
 export default function FlipkartClone() {
-  const [products] = useState<Product[]>(productsData);
+  const [products, setProducts] = useState<Product[]>(productsData);
   const [categories, selectedCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,13 +78,15 @@ export default function FlipkartClone() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
+    const categoryIdMap = new Map<string, number>();
+    let nextCategoryId = 1;
+  
     getCategories()
       .then((data) => {
         if (!Array.isArray(data)) {
           console.error("Categories API returned invalid data:", data);
           return;
         }
-
         const categoriesData: Category[] = data.map((cat, index) => ({
           id: index + 1,
           name: cat.name,
@@ -86,6 +96,31 @@ export default function FlipkartClone() {
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
+      });
+  
+    getProducts()
+      .then((data) => {
+        if (!Array.isArray(data)) {
+          console.error("Products API returned invalid data:", data);
+          return;
+        }
+        const products = data.map((p, index) => {
+          if (!categoryIdMap.has(p.category._id)) {
+            categoryIdMap.set(p.category._id, nextCategoryId++);
+          }
+          return {
+            id: index + 1,
+            name: p.name,
+            description: p.description,
+            price: p.price,
+            categoryId: categoryIdMap.get(p.category._id)!,
+            image: p.images && p.images.length > 0 ? p.images[0] : "",
+          };
+        });
+        setProducts(products);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
       });
   }, []);
 
@@ -158,85 +193,77 @@ export default function FlipkartClone() {
           </div>
         </div>
       </nav>
+
+      {/* Main Content */}
       <div className="row">
         {/* Categories Sidebar */}
-        <div className="col-md-3">
-          <h5>Categories</h5>
-          <ul className="list-group mb-3">
-            <li
-              className={`list-group-item ${selectedCategory === null ? "active" : ""
-                }`}
-              onClick={() => setSelectedCategory(null)}
-              style={{ cursor: "pointer" }}
-            >
-              All
-            </li>
-            {categories.map((cat) => (
+        <aside className="col-12 col-md-4 col-lg-3 mb-4">
+          <div className="border rounded p-3 h-100 d-flex flex-column">
+            <h5 className="mb-3">Categories</h5>
+            <ul className="list-group mb-4 flex-grow-1 overflow-auto" style={{ maxHeight: "300px" }}>
               <li
-                key={cat.id}
-                className={`list-group-item ${selectedCategory === cat.id ? "active" : ""
-                  }`}
-                onClick={() => setSelectedCategory(cat.id)}
+                className={`list-group-item pointer ${selectedCategory === null ? "active" : ""}`}
+                onClick={() => setSelectedCategory(null)}
                 style={{ cursor: "pointer" }}
               >
-                {cat.name}
+                All
               </li>
-            ))}
-          </ul>
+              {categories.map((cat: any) => (
+                <li
+                  key={cat.id}
+                  className={`list-group-item pointer ${selectedCategory === cat.id ? "active" : ""}`}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {cat.name}
+                </li>
+              ))}
+            </ul>
 
-          {/* Cart */}
-          <h5>
-            Cart ({cart.reduce((acc, item) => acc + item.quantity, 0)} items)
-          </h5>
-          <ul className="list-group mb-3">
-            {cart.length === 0 && (
-              <li className="list-group-item text-muted">Cart is empty</li>
-            )}
-            {cart.map((item) => (
-              <li
-                key={item.id}
-                className="list-group-item d-flex justify-content-between align-items-center"
+            {/* Cart */}
+            <h5>Cart ({cart.reduce((acc: any, item: any) => acc + item.quantity, 0)} items)</h5>
+            <ul className="list-group mb-3 flex-grow-1 overflow-auto" style={{ maxHeight: "250px" }}>
+              {cart.length === 0 && <li className="list-group-item text-muted">Cart is empty</li>}
+              {cart.map((item: any) => (
+                <li
+                  key={item.id}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <div>
+                    {item.name} <br />
+                    <small>₹{item.price} × {item.quantity}</small>
+                  </div>
+                  <div>
+                    <button
+                      className="btn btn-sm btn-danger me-1"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      −
+                    </button>
+                    <button className="btn btn-sm btn-success" onClick={() => addToCart(item)}>
+                      +
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Total & Checkout */}
+            <div>
+              <h5>Total: ₹{totalAmount.toLocaleString()}</h5>
+              <button
+                className="btn btn-primary w-100"
+                onClick={handleCheckout}
+                disabled={cart.length === 0}
               >
-                <div>
-                  {item.name} <br />
-                  <small>
-                    ₹{item.price} × {item.quantity}
-                  </small>
-                </div>
-                <div>
-                  <button
-                    className="btn btn-sm btn-danger me-1"
-                    onClick={() => removeFromCart(item.id)}
-                  >
-                    −
-                  </button>
-                  <button
-                    className="btn btn-sm btn-success"
-                    onClick={() => addToCart(item)}
-                  >
-                    +
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          {/* Total & Checkout */}
-          <div>
-            <h5>Total: ₹{totalAmount.toLocaleString()}</h5>
-            <button
-              className="btn btn-primary w-100"
-              onClick={handleCheckout}
-              disabled={cart.length === 0}
-            >
-              Checkout
-            </button>
+                Checkout
+              </button>
+            </div>
           </div>
-        </div>
+        </aside>
 
-        {/* Products Grid */}
-        <div className="col-md-9">
-          {/* Search Input */}
+        {/* Products List */}
+        <section className="col-12 col-md-8 col-lg-9">
           <input
             type="text"
             className="form-control mb-3"
@@ -245,41 +272,38 @@ export default function FlipkartClone() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            {filteredProducts.length === 0 && (
-              <div className="col-12 text-center text-muted mt-5">
-                No products found
-              </div>
-            )}
-
-            {filteredProducts.map((product) => (
-              <div className="col" key={product.id}>
-                <div className="card h-100 shadow-sm">
-                  <img
-                    src={product.image}
-                    className="card-img-top"
-                    alt={product.name}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{product.name}</h5>
-                    <p className="card-text">{product.description}</p>
-                    <div className="d-flex justify-content-between align-items-center mt-auto">
-                      <span className="h5 mb-0">₹{product.price.toLocaleString()}</span>
-                      <button
-                        className="btn btn-outline-primary"
-                        onClick={() => addToCart(product)}
-                      >
-                        <i className="bi bi-cart-plus"></i> Add to Cart
-                      </button>
+          <div className="row g-4">
+            {filteredProducts.length === 0 ? (
+              <div className="col-12 text-center text-muted mt-5">No products found</div>
+            ) : (
+              filteredProducts.map((product: any) => (
+                <div key={product.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+                  <div className="card h-100 shadow-sm">
+                    <img
+                      src={product.image}
+                      className="card-img-top"
+                      alt={product.name}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <div className="card-body d-flex flex-column">
+                      <h5 className="card-title">{product.name}</h5>
+                      <p className="card-text flex-grow-1">{product.description}</p>
+                      <div className="d-flex justify-content-between align-items-center mt-auto">
+                        <span className="h5 mb-0">₹{product.price.toLocaleString()}</span>
+                        <button
+                          className="btn btn-outline-primary"
+                          onClick={() => addToCart(product)}
+                        >
+                          <i className="bi bi-cart-plus"></i> Add to Cart
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
-
-        </div>
+        </section>
       </div>
 
       {/* Checkout Success Modal */}

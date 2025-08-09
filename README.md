@@ -79,6 +79,20 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
 **Cloud Hosting**: Azure / AWS.  
 
 ---
+# Swagger Documentation
+
+Swagger UI is available at:  
+`http://localhost:5000/api-docs`
+
+---
+
+# Test Cases and Test Coverage
+
+To run tests and generate coverage reports in server, use:  
+```bash
+npm run coverage
+```
+---
 
 ## Flow Diagram
 
