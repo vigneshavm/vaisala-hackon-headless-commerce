@@ -1,4 +1,4 @@
-# 🛒 E-Commerce Platform – README  
+#  E-Commerce Platform – Headless PaaS  
 
 ## 📌 Overview  
 This project allows **business users** to control their own domain and manage product-related content, while **normal users** can browse, purchase, and track products through a seamless shopping experience.  
@@ -9,8 +9,8 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
 ## 👤 User Roles  
 
 ### **1. Business / Admin Users**  
-- Manage product details (add, update, delete).  
-- Configure discounts and offers.  
+- Manage product details (add, update, delete).  -- call strapi API
+- Configure discounts and offers.  -- get from strapi
 - Upload banners for promotional campaigns.  
 - Manage content via **Strapi (Headless CMS)**.  
 - Data served via **REST APIs**.  
@@ -80,8 +80,26 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
 
 ---
 
-## 🏗 Architecture  
-- **Backend**:  
-  - Scalable **microservices** architecture.  
-- **Frontend**:  
-  - **Micro-frontend** approach.  
+## Flow Diagram
+
+              ┌───────────────────────┐
+              │     Frontend           │
+              │  (Micro-frontend)      │
+              └──────────┬─────────────┘
+                         │
+         ┌───────────────┼─────────────────────────┐
+         │               │                         │
+ ┌───────▼─────────────────────────────────┐ ┌─────▼────────────────┐
+ │ Admin Panel & Preview (JWT Protected)   │ │ Public Product List   │
+ └───────────────┬─────────────────────────┘ └──────────┬───────────┘
+                 │ /api/admin/products[?preview=true]   │ /api/products (public)
+                 ▼                                       ▼
+ ┌────────────────────────────────────────────────────────┐
+ │                Node.js BFF (Backend for Frontend)       │
+ └───────────┬──────────────────────┬─────────────────────┘
+             │                      │
+     (API Token auth)       (Filtered safe response)
+             ▼                      ▼
+   ┌────────────────────┐   ┌────────────────────┐
+   │ Strapi REST API     │   │ Strapi Draft API   │
+   └────────────────────┘   └────────────────────┘
