@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/userApi";
+import { useNavigate } from "react-router-dom";
 import {
   Background,
   Shape1,
@@ -17,7 +18,6 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -28,24 +28,22 @@ const Login: React.FC = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
- const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
 
-    try {
-      const res = await login(formData);
-      console.log("Login success", res);
-      // Redirect to dashboard or home page
-      navigate("/ProductList");
-    } catch {
-      navigate("/ProductList");
-      // setError("Invalid credentials. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const handleSubmit = async (e: FormEvent) => {
+    // e.preventDefault();
+    // setError("");
+    // setLoading(true);
+
+    // try {
+    //   const res = await login(formData);
+    //   console.log("Login success", res);
+    //   // TODO: Store token or redirect here
+    // } catch {
+    //   setError("Invalid credentials. Please try again.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
-
   return (
     <Background>
       <div className="container px-4 px-md-5 w-100">
@@ -105,12 +103,16 @@ const Login: React.FC = () => {
                   {loading ? "Logging in..." : "Login"}
                 </FullWidthBtn>
 
-                {/* Forgot link */}
-                <div className="text-center">
-                  <a href="#!" className="small text-muted">
-                    Forgot password?
-                  </a>
-                </div>
+                {/* Forgot & Signup links */}
+<div className="d-flex justify-content-between small text-muted mb-3">
+  <a href="#!" className="">
+    Forgot password?
+  </a>
+  <a href="/signup" className="">
+    Sign Up
+  </a>
+</div>
+
               </form>
             </GlassCard>
           </div>

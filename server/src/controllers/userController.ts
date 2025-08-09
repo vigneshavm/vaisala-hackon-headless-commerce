@@ -15,17 +15,17 @@ export const createUserHandler = async (req: Request, res: Response) => {
 };
 
 export const loginUserHandler = async (req: Request, res: Response) => {
-    console.log("loginUserHandler called", req);
-    console.log("Request body:", req.body);
+    console.log("loginUserHandler called", req.body);
     try {
       const { email, password } = req.body;
+      console.log("Email:", email, "Password:", password);
   
       if (typeof email !== "string" || typeof password !== "string") {
         return res.status(400).json({ message: "Email and password are required and must be strings" });
       }
   
-      const user = await userService.getUserByAuthId(email);
-
+      const user = await userService.getUserByEmail(email);
+      console.log(user, "user is ")
       if (!user || !user.password) {
         return res.status(401).json({ message: "Invalid credentials" });
       }

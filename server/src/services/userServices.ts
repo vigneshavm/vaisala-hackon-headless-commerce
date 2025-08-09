@@ -7,9 +7,13 @@ async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, saltRounds);
 }
 
-async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-  return bcrypt.compare(password, hashedPassword);
-}
+const getUserByEmail = async (email: string) => {
+  return await User.findOne({ email });
+};
+
+const getUserByAuthId = async (authId: string) => {
+  return await User.findOne({ authId });
+};
 
 async function createUser(data: Partial<IUser>) {
   if (data.password) {
@@ -21,10 +25,6 @@ async function createUser(data: Partial<IUser>) {
 
 async function getUserById(id: string) {
   return User.findById(id);
-}
-
-async function getUserByAuthId(authId: string) {
-  return User.findOne({ authId });
 }
 
 async function updateUser(id: string, updates: Partial<IUser>) {
@@ -44,6 +44,6 @@ export {
   getUserByAuthId,
   updateUser,
   deleteUser,
-  hashPassword,
-  verifyPassword,
+  getUserByEmail,
+  hashPassword
 };
