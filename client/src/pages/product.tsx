@@ -35,7 +35,7 @@ interface CartItem extends Product {
 
 
 export default function FlipkartClone() {
-  const [products, setProducts] = useState<Product[]>();
+  const [products, setProducts] = useState<any[]>();
   const [categories, selectedCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,7 +92,7 @@ export default function FlipkartClone() {
   }, []);
 
   // Filter products by category & search term
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts =products && products.filter((product) => {
     const matchesCategory =
       selectedCategory === null || product.categoryId === selectedCategory;
     const matchesSearch =
@@ -240,10 +240,10 @@ export default function FlipkartClone() {
           />
 
           <div className="row g-4">
-            {filteredProducts.length === 0 ? (
+            {filteredProducts&&filteredProducts.length === 0 ? (
               <div className="col-12 text-center text-muted mt-5">No products found</div>
             ) : (
-              filteredProducts.map((product: any) => (
+             filteredProducts&& filteredProducts.map((product: any) => (
                 <div key={product.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
                   <div className="card h-100 shadow-sm">
                     <img
