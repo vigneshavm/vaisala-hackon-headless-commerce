@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { login } from "../api/userApi";
+import { useNavigate } from "react-router-dom";
 import {
   Background,
   Shape1,
@@ -16,6 +17,7 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
+   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -35,14 +37,15 @@ const Login: React.FC = () => {
     try {
       const res = await login(formData);
       console.log("Login success", res);
-      // TODO: Store token or redirect here
+
+      // Example: navigate to dashboard or home page after login
+      navigate("/dashboard"); // change path as needed
     } catch {
       setError("Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <Background>
       <div className="container px-4 px-md-5 w-100">
