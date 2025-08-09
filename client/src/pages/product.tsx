@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { getProducts } from "../api/productApi";
-import { ApiResponse } from "../types/productTypes";
+import { getCategories } from "../api/categoryApi";
+import { Product, Category } from "../types/productTypes";
 
 export default function ProductList() {
-  const [data, setData] = useState<ApiResponse>({
-    products: [],
-    categories: [],
-  });
-
-   
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getProducts()
-      .then((res:any) => {
-        setData(res); 
+    // Fetch products and categories separately
+    Promise.all([getProducts(), getCategories()])
+      .then(([productRes, categoryRes]) => {
+        setProducts(productRes);
+        setCategories(categoryRes);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>
       <h2>Products</h2>
       <ul>
-        {data.products.map((p) => (
+        {products.map((p) => (
           <li key={p.id}>
             {p.name} - ${p.price}
           </li>
@@ -31,7 +34,7 @@ export default function ProductList() {
 
       <h2>Categories</h2>
       <ul>
-        {data.categories.map((c) => (
+        {categories.map((c) => (
           <li key={c.id}>{c.name}</li>
         ))}
       </ul>

@@ -28,19 +28,19 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+    // e.preventDefault();
+    // setError("");
+    // setLoading(true);
 
-    try {
-      const res = await login(formData);
-      console.log("Login success", res);
-      // TODO: Store token or redirect here
-    } catch {
-      setError("Invalid credentials. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const res = await login(formData);
+    //   console.log("Login success", res);
+    //   // TODO: Store token or redirect here
+    // } catch {
+    //   setError("Invalid credentials. Please try again.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
