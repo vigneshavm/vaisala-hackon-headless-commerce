@@ -4,8 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json' assert { type: 'json' }; 
-import router from './routes/userRoutes';  
-
+import userRoutes from './routes/userRoutes';  
+import productRoutes from './routes/productRoutes';  
 dotenv.config();
 
 const app = express();
@@ -16,7 +16,8 @@ app.use(express.json());
 
 app.get('/', (_, res) => res.send('API running'));
 console.log("index.jas loaded");
-app.use('/users', router);
+app.use('/users', userRoutes);
+app.use('/users', productRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

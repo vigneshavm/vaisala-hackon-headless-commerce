@@ -1,10 +1,18 @@
+// src/routes/userRoutes.ts
 import { Router } from "express";
 import * as userController from "../controllers/userController";
 
-const router = Router();
-console.log("user rotes .jas loaded");
-router.post("/", userController.createUserHandler);
-router.post("/login", userController.loginUserHandler);
-router.get("/:id", userController.getUserHandler);
+const userRoutes = Router();
 
-export default router;
+console.log("✅ userRoutes.ts loaded");
+
+// Create a new user
+userRoutes.post("/", userController.createUserHandler);
+
+// Login user
+userRoutes.post("/login", userController.loginUserHandler);
+
+// Get user by ID
+userRoutes.get("/:id", userController.getUserHandler);
+
+export default userRoutes;
