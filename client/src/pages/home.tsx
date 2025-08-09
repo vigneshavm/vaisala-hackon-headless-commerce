@@ -105,12 +105,16 @@ const Login: React.FC = () => {
                   {loading ? "Logging in..." : "Login"}
                 </FullWidthBtn>
 
-                {/* Forgot link */}
-                <div className="text-center">
-                  <a href="#!" className="small text-muted">
-                    Forgot password?
-                  </a>
-                </div>
+                {/* Forgot & Signup links */}
+<div className="d-flex justify-content-between small text-muted mb-3">
+  <a href="#!" className="">
+    Forgot password?
+  </a>
+  <a href="/signup" className="">
+    Sign Up
+  </a>
+</div>
+
               </form>
             </GlassCard>
           </div>
