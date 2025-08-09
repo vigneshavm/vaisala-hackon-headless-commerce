@@ -85,3 +85,23 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
   - Scalable **microservices** architecture.  
 - **Frontend**:  
   - **Micro-frontend** approach.  
+
+[Frontend Admin Panel] 
+      ↓
+   /api/admin/products   (BFF, JWT protected)
+      ↓
+[Node.js BFF]
+      ↓
+  [Strapi REST API] (Server-to-server with API token)
+
+[Frontend Public Product List]
+      ↓
+   /api/products  (BFF, public)
+      ↓
+[Node.js BFF → Strapi REST API → Filtered safe response]
+
+[Frontend Admin Preview]
+      ↓
+   /api/admin/products?preview=true  (BFF, JWT protected)
+      ↓
+[Node.js BFF → Strapi draft content API]
