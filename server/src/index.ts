@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json' assert { type: 'json' }; 
 import router from './routes/userRoutes';  
+import categoryRoutes from './routes/categoryRoutes';
 
 dotenv.config();
 
@@ -15,9 +16,9 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (_, res) => res.send('API running'));
-console.log("index.jas loaded");
-app.use('/users', router);
 
+app.use('/users', router);
+app.use('/categories', categoryRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
