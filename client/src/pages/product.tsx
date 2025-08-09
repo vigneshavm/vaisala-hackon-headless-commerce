@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getCategories } from "../api/categoryApi";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
 interface Category {
@@ -62,12 +63,32 @@ const productsData: Product[] = [
 
 export default function FlipkartClone() {
   const [products] = useState<Product[]>(productsData);
-  const [categories] = useState<Category[]>(categoriesData);
+  const [categories, selectedCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
 
+  useEffect(() => {
+    getCategories()
+      .then((data) => {
+        if (!Array.isArray(data)) {
+          console.error("Categories API returned invalid data:", data);
+          return;
+        }
+  
+        const categoriesData: Category[] = data.map((cat, index) => ({
+          id: index + 1, 
+          name: cat.name,
+        }));
+  
+        selectedCategories(categoriesData); // update state with categories
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+  
   // Filter products by category & search term
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
