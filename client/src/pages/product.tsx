@@ -121,7 +121,19 @@ export default function FlipkartClone() {
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-3">Ecommerce</h2>
+         <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">
+            Ecommerce Products
+          </a>
+          <div className="d-flex align-items-center">
+            <span className="me-3">Hello, User</span>
+            <button className="btn btn-outline-danger btn-sm" >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
       <div className="row">
         {/* Categories Sidebar */}
         <div className="col-md-3">
