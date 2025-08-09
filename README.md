@@ -9,8 +9,8 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
 ## 👤 User Roles  
 
 ### **1. Business / Admin Users**  
-- Manage product details (add, update, delete).  
-- Configure discounts and offers.  
+- Manage product details (add, update, delete).  -- call strapi API
+- Configure discounts and offers.  -- get from strapi
 - Upload banners for promotional campaigns.  
 - Manage content via **Strapi (Headless CMS)**.  
 - Data served via **REST APIs**.  
