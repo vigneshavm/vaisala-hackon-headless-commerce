@@ -1,61 +1,120 @@
-import { useState } from 'react';
-import { login } from '../api/userApi'; // Assume you have this API
+import { useState, ChangeEvent, FormEvent } from "react";
+import { login } from "../api/userApi";
+import {
+  Background,
+  Shape1,
+  Shape2,
+  GlassCard,
+  Title,
+  SubTitle,
+  FullWidthBtn,
+} from "./home.styled";
 
-function Login() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+const Login: React.FC = () => {
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
+
     try {
-      const res = await login(formData); // login({ email, password })
-      console.log('Login success', res);
-      // Store token, redirect, etc.
-    } catch (err: any) {
-      console.error('Login failed', err);
-      setError('Invalid credentials. Please try again.');
+      const res = await login(formData);
+      console.log("Login success", res);
+      // TODO: Store token or redirect here
+    } catch {
+      setError("Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '400px', margin: 'auto' }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-    </div>
+    <Background>
+      <div className="container px-4 px-md-5 w-100">
+        <div className="row gx-lg-5 align-items-center justify-content-center">
+          {/* Left text */}
+          <div className="col-lg-5 text-white mb-5 mb-lg-0">
+            <Title>
+              Welcome Back <br />
+              <span>Please login to continue</span>
+            </Title>
+            <SubTitle>
+              Enter your credentials to access your account securely.
+            </SubTitle>
+          </div>
+
+          {/* Right form */}
+          <div className="col-lg-5 position-relative">
+            <Shape1 />
+            <Shape2 />
+            <GlassCard>
+              <form onSubmit={handleSubmit}>
+                {/* Email */}
+                <div className="form-outline mb-4">
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className="form-label">Email address</label>
+                </div>
+
+                {/* Password */}
+                <div className="form-outline mb-4">
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className="form-label">Password</label>
+                </div>
+
+                {/* Error */}
+                {error && <div className="alert alert-danger py-2">{error}</div>}
+
+                {/* Submit */}
+                <FullWidthBtn
+                  type="submit"
+                  className="btn btn-primary btn-block mb-4"
+                  disabled={loading}
+                >
+                  {loading ? "Logging in..." : "Login"}
+                </FullWidthBtn>
+
+                {/* Forgot link */}
+                <div className="text-center">
+                  <a href="#!" className="small text-muted">
+                    Forgot password?
+                  </a>
+                </div>
+              </form>
+            </GlassCard>
+          </div>
+        </div>
+      </div>
+    </Background>
   );
-}
+};
 
 export default Login;
