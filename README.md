@@ -82,19 +82,17 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
 
 ## Flow Diagram
 
-  ## 🏗 Architecture (Flow Diagram)
 
 ```mermaid
 flowchart TD
-    subgraph Frontend [Frontend (Micro-frontend)]
-        Admin[Admin Panel & Preview (JWT Protected)]
-        Public[Public Product List]
+    subgraph FE[Frontend (Micro-frontend)]
+        A[Admin Panel & Preview<br/>(JWT Protected)]
+        P[Public Product List]
     end
 
-    Admin -->|/api/admin/products[?preview=true]| BFF[Node.js BFF (Backend for Frontend)]
-    Public -->|/api/products (public)| BFF
+    A -->|/api/admin/products[?preview=true]| BFF[Node.js BFF<br/>(Backend for Frontend)]
+    P -->|/api/products (public)| BFF
 
-    BFF -->|API Token Auth| Strapi[Strapi REST API]
-    BFF -->|Draft Content API| Draft[Strapi Draft API]
-
-
+    BFF -->|API Token Auth| S[Strapi REST API]
+    BFF -->|Draft Content API| D[Strapi Draft API]
+```
