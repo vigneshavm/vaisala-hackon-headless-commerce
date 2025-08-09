@@ -148,7 +148,7 @@ const Signup: React.FC = () => {
 
                 {/* Login link */}
                 <div className="text-center">
-                  <a href="/login" className="small text-muted">
+                  <a href="/" className="small text-muted">
                     Already have an account? Login
                   </a>
                 </div>
