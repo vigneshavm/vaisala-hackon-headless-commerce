@@ -24,7 +24,9 @@ export const getProductHandler = async (req: Request, res: Response) => {
 export const getAllProductsHandler = async (_req: Request, res: Response) => {
   try {
     const products = await productService.getAllProducts();
-    res.json(products);
+
+    console.log(products,"products")
+    res.json({products:products,categories:products});
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }

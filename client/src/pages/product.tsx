@@ -8,6 +8,8 @@ export default function ProductList() {
     categories: [],
   });
 
+   
+
   useEffect(() => {
     getProducts()
       .then((res:any) => {

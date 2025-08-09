@@ -18,9 +18,9 @@ app.use(express.json());
 
 app.get('/', (_, res) => res.send('API running'));
 
-app.use('/users', userRoutes);
-app.use('/products', productRoutes);
-app.use('/categories', categoryRoutes);
+app.use('/apiusers', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 mongoose

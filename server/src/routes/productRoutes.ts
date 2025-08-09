@@ -1,18 +1,13 @@
-// src/routes/userRoutes.ts
-import { Router } from "express";
-import * as userController from "../controllers/userController";
+// src/routes/categoryRoutes.ts
+import { Router } from 'express';
+import * as productController from '../controllers/productController';
 
-const productRoutes = Router();
+const router = Router();
 
-console.log("✅ userRoutes.ts loaded");
+router.post('/', productController.createProductHandler);
+router.get('/', productController.getAllProductsHandler);
+router.get('/:id', productController.getProductHandler);
+router.put('/:id', productController.updateProductHandler);
+router.delete('/:id', productController.deleteProductHandler);
 
-// Create a new user
-productRoutes.post("/", userController.createUserHandler);
-
-// Login user
-productRoutes.post("/login", userController.loginUserHandler);
-
-// Get user by ID
-productRoutes.get("/:id", userController.getUserHandler);
-
-export default productRoutes;
+export default router;

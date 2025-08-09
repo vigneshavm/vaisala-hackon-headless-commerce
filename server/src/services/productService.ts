@@ -10,7 +10,21 @@ export const getProductById = async (id: string): Promise<IProduct | null> => {
 };
 
 export const getAllProducts = async (): Promise<IProduct[]> => {
-  return await Product.find().populate('category').exec();
+  const sampleProducts: any[] = [
+    {
+      id:1,
+      name: "Sample Product 1",
+      slug: "sample-product-1",
+      description: "This is the first sample product.",
+      price: 29.99,
+      inventory: 50,
+      images: ["image1.jpg", "image2.jpg"],
+      isPublished: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ];
+  return sampleProducts
 };
 
 export const updateProduct = async (id: string, data: Partial<IProduct>): Promise<IProduct | null> => {
