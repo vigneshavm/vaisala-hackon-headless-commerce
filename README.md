@@ -82,17 +82,24 @@ It uses **Strapi** as a headless CMS and exposes **REST APIs** for front-end int
 
 ## Flow Diagram
 
-
-```mermaid
-flowchart TD
-    subgraph FE[Frontend (Micro-frontend)]
-        A[Admin Panel & Preview<br/>(JWT Protected)]
-        P[Public Product List]
-    end
-
-    A -->|/api/admin/products[?preview=true]| BFF[Node.js BFF<br/>(Backend for Frontend)]
-    P -->|/api/products (public)| BFF
-
-    BFF -->|API Token Auth| S[Strapi REST API]
-    BFF -->|Draft Content API| D[Strapi Draft API]
-```
+              ┌───────────────────────┐
+              │     Frontend           │
+              │  (Micro-frontend)      │
+              └──────────┬─────────────┘
+                         │
+         ┌───────────────┼─────────────────────────┐
+         │               │                         │
+ ┌───────▼─────────────────────────────────┐ ┌─────▼────────────────┐
+ │ Admin Panel & Preview (JWT Protected)   │ │ Public Product List   │
+ └───────────────┬─────────────────────────┘ └──────────┬───────────┘
+                 │ /api/admin/products[?preview=true]   │ /api/products (public)
+                 ▼                                       ▼
+ ┌────────────────────────────────────────────────────────┐
+ │                Node.js BFF (Backend for Frontend)       │
+ └───────────┬──────────────────────┬─────────────────────┘
+             │                      │
+     (API Token auth)       (Filtered safe response)
+             ▼                      ▼
+   ┌────────────────────┐   ┌────────────────────┐
+   │ Strapi REST API     │   │ Strapi Draft API   │
+   └────────────────────┘   └────────────────────┘
