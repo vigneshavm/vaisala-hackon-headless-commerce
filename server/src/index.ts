@@ -15,16 +15,16 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (_, res) => res.send('API running'));
-
-app.use('/api/users', router);
+console.log("index.jas loaded");
+app.use('/users', router);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 mongoose
-  .connect(process.env.MONGO_URI!)
+  .connect('mongodb://localhost:27017/hackathon_ecom')
   .then(() => {
-    console.log('MongoDB connected');
+    console.log('MongoDB connected..');
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch(err => console.error(err));
