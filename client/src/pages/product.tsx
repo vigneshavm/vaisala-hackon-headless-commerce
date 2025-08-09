@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCategories } from "../api/categoryApi";
+import { getProducts } from "../api/productApi";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
 interface Category {
@@ -16,15 +17,21 @@ interface Product {
   image: string;
 }
 
+export interface RawProduct {
+  _id: string;
+  name: string;
+  price: number;
+  category: {
+    _id: string;
+    name: string;
+  };
+  images: string[];
+  // other fields from API if needed
+}
+
 interface CartItem extends Product {
   quantity: number;
 }
-
-const categoriesData: Category[] = [
-  { id: 1, name: "Mobiles" },
-  { id: 2, name: "Laptops" },
-  { id: 3, name: "Headphones" },
-];
 
 const productsData: Product[] = [
   {
@@ -62,7 +69,7 @@ const productsData: Product[] = [
 ];
 
 export default function FlipkartClone() {
-  const [products] = useState<Product[]>(productsData);
+  const [products, setProducts] = useState<Product[]>(productsData);
   const [categories, selectedCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,22 +77,48 @@ export default function FlipkartClone() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
 
   useEffect(() => {
+    const categoryIdMap = new Map<string, number>();
+    let nextCategoryId = 1;
+  
     getCategories()
       .then((data) => {
         if (!Array.isArray(data)) {
           console.error("Categories API returned invalid data:", data);
           return;
         }
-  
         const categoriesData: Category[] = data.map((cat, index) => ({
-          id: index + 1, 
+          id: index + 1,
           name: cat.name,
         }));
-  
-        selectedCategories(categoriesData); // update state with categories
+        selectedCategories(categoriesData);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
+      });
+  
+    getProducts()
+      .then((data) => {
+        if (!Array.isArray(data)) {
+          console.error("Products API returned invalid data:", data);
+          return;
+        }
+        const products = data.map((p, index) => {
+          if (!categoryIdMap.has(p.category._id)) {
+            categoryIdMap.set(p.category._id, nextCategoryId++);
+          }
+          return {
+            id: index + 1,
+            name: p.name,
+            description: p.description,
+            price: p.price,
+            categoryId: categoryIdMap.get(p.category._id)!,
+            image: p.images && p.images.length > 0 ? p.images[0] : "",
+          };
+        });
+        setProducts(products);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
       });
   }, []);
   
