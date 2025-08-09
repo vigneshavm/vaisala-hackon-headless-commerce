@@ -35,7 +35,7 @@ const Signup: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await signup(formData);
+      const res = await signup();
       console.log("Signup success", res);
       navigate("/welcome");
     } catch {
@@ -51,7 +51,7 @@ const Signup: React.FC = () => {
     setLoading(true);
     try {
       // This function should handle OAuth flow for provider and return user info or token
-      const res = await socialLogin(provider);
+      const res = await socialLogin();
       console.log(`${provider} login success`, res);
       navigate("/welcome");
     } catch {
