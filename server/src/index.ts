@@ -4,7 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json' assert { type: 'json' }; 
-import router from './routes/userRoutes';  
+import userRoutes from './routes/userRoutes';  
+import productRoutes from './routes/productRoutes'; 
 import categoryRoutes from './routes/categoryRoutes';
 
 dotenv.config();
@@ -17,10 +18,10 @@ app.use(express.json());
 
 app.get('/', (_, res) => res.send('API running'));
 
-app.use('/users', router);
+app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 
 mongoose
   .connect('mongodb://localhost:27017/hackathon_ecom')
