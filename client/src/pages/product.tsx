@@ -33,44 +33,9 @@ interface CartItem extends Product {
   quantity: number;
 }
 
-const productsData: Product[] = [
-  {
-    id: 1,
-    name: "iPhone 15",
-    description: "Latest iPhone model",
-    price: 99999,
-    categoryId: 1,
-    image: "https://images.unsplash.com/photo-1720048171731-15b3d9d5473f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MXwxfHNlYXJjaHwxfHxzbWFydHBob25lfGVufDB8MHx8fDE3MjEzMDU4NTZ8MA&ixlib=rb-4.0.3&q=80&w=1080",
-  },
-  {
-    id: 2,
-    name: "Samsung Galaxy S23",
-    description: "Flagship Android phone",
-    price: 84999,
-    categoryId: 1,
-    image: "https://images.unsplash.com/photo-1598618826732-fb2fdf367775?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxzbWFydHBob25lfGVufDB8MHx8fDE3MjEzMDU4NTZ8MA&ixlib=rb-4.0.3&q=80&w=1080"
-  },
-  {
-    id: 3,
-    name: "MacBook Air M2",
-    description: "Lightweight & powerful",
-    price: 12499,
-    categoryId: 2,
-    image: "https://images.unsplash.com/photo-1600087626120-062700394a01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxzbWFydHBob25lfGVufDB8MHx8fDE3MjEzMDU4NTZ8MA&ixlib=rb-4.0.3&q=80&w=1080",
-  },
-  {
-    id: 4,
-    name: "Sony WH-1000XM5",
-    description: "Noise cancelling headphones",
-    price: 29999,
-    categoryId: 3,
-    image: "https://images.unsplash.com/photo-1598965402089-897ce52e8355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw0fHxzbWFydHBob25lfGVufDB8MHx8fDE3MjEzMDU4NTZ8MA&ixlib=rb-4.0.3&q=80&w=1080",
-  },
-];
-
 
 export default function FlipkartClone() {
-  const [products, setProducts] = useState<Product[]>(productsData);
+  const [products, setProducts] = useState<Product[]>();
   const [categories, selectedCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,6 +46,8 @@ export default function FlipkartClone() {
     const categoryIdMap = new Map<string, number>();
     let nextCategoryId = 1;
   
+
+    
     getCategories()
       .then((data) => {
         if (!Array.isArray(data)) {
@@ -111,7 +78,7 @@ export default function FlipkartClone() {
           return {
             id: index + 1,
             name: p.name,
-            description: p.description,
+            descrProductiption: p.description,
             price: p.price,
             categoryId: categoryIdMap.get(p.category._id)!,
             image: p.images && p.images.length > 0 ? p.images[0] : "",
