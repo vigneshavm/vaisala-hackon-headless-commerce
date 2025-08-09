@@ -18,30 +18,31 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
+    email: "", 
     password: "",
   });
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
+const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    // e.preventDefault();
-    // setError("");
-    // setLoading(true);
+     
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    // try {
-    //   const res = await login(formData);
-    //   console.log("Login success", res);
-    //   // TODO: Store token or redirect here
-    // } catch {
-    //   setError("Invalid credentials. Please try again.");
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const res = await login(formData);
+      console.log("Login success", res);
+       navigate("/productList ");
+    } catch {
+      setError("Invalid credentials. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <Background>
