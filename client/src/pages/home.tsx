@@ -35,6 +35,7 @@ const Login: React.FC = () => {
     try {
       const res = await login(formData);
       console.log("Login success", res);
+    
       // TODO: Store token or redirect here
     } catch {
       setError("Invalid credentials. Please try again.");
