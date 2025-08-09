@@ -1,4 +1,4 @@
-# 🛒 E-Commerce Platform – README  
+#  E-Commerce Platform – Headless PaaS  
 
 ## 📌 Overview  
 This project allows **business users** to control their own domain and manage product-related content, while **normal users** can browse, purchase, and track products through a seamless shopping experience.  
