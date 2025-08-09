@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getCategories } from "../api/categoryApi";
 import { getProducts } from "../api/productApi";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
 interface Category {
   id: number;
@@ -50,7 +50,7 @@ const productsData: Product[] = [
     categoryId: 1,
     image: "https://images.unsplash.com/photo-1598618826732-fb2fdf367775?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxzbWFydHBob25lfGVufDB8MHx8fDE3MjEzMDU4NTZ8MA&ixlib=rb-4.0.3&q=80&w=1080"
   },
-    {
+  {
     id: 3,
     name: "MacBook Air M2",
     description: "Lightweight & powerful",
@@ -76,7 +76,7 @@ export default function FlipkartClone() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const categoryIdMap = new Map<string, number>();
     let nextCategoryId = 1;
@@ -91,7 +91,8 @@ export default function FlipkartClone() {
           id: index + 1,
           name: cat.name,
         }));
-        selectedCategories(categoriesData);
+
+        selectedCategories(categoriesData); // update state with categories
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -122,7 +123,7 @@ export default function FlipkartClone() {
         console.error("Error fetching products:", error);
       });
   }, []);
-  
+
   // Filter products by category & search term
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
@@ -164,6 +165,9 @@ export default function FlipkartClone() {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+  const handleLogout = () => {
+    navigate("/"); // redirect to home page
+  };
 
   const handleCheckout = () => {
     if (cart.length === 0) {
@@ -176,15 +180,16 @@ export default function FlipkartClone() {
 
   return (
     <div className="container mt-4">
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm rounded">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
             Ecommerce Products
           </a>
           <div className="d-flex align-items-center">
             <span className="me-3">Hello, User</span>
-            <button className="btn btn-outline-danger btn-sm">Logout</button>
+            <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
       </nav>
@@ -343,4 +348,3 @@ export default function FlipkartClone() {
 }
 
 
-     

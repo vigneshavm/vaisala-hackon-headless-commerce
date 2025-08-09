@@ -5,7 +5,16 @@ export const getUsers = async (): Promise<any[]> => {
   if (!res.ok) throw new Error('Failed to fetch users');
   return res.json();
 };
-
+export const socialLogin = async (): Promise<any[]> => {
+  const res = await fetch('http://localhost:5000/users');
+  if (!res.ok) throw new Error('Failed to fetch users');
+  return res.json();
+};
+export const signup = async (): Promise<any[]> => {
+  const res = await fetch('http://localhost:5000/users');
+  if (!res.ok) throw new Error('Failed to fetch users');
+  return res.json();
+};
 export const addUser = async (user: any): Promise<any> => {
   const res = await fetch('http://localhost:5000/users', {
     method: 'POST',
