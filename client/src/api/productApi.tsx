@@ -2,7 +2,7 @@ import { Product } from "../types/productTypes";
 import { API_URL } from "../config";
 
 export async function getProducts(): Promise<Product[]> {
-  const res = await fetch(`${API_URL}/api/products`, {
+  const res = await fetch(`${API_URL}/products`, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

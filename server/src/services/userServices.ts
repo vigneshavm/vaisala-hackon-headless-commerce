@@ -7,6 +7,10 @@ async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, saltRounds);
 }
 
+async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
+
 const getUserByEmail = async (email: string) => {
   return await User.findOne({ email });
 };
@@ -45,5 +49,6 @@ export {
   updateUser,
   deleteUser,
   getUserByEmail,
-  hashPassword
+  hashPassword,
+  verifyPassword
 };

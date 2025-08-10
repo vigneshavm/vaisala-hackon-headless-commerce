@@ -3,6 +3,7 @@ import * as userController from "../controllers/userController";
 
 const userRoutes = Router();
 
+// rohithkksmy@example.com  // password: rohithkksmy 
 
 // Create a new user with validation
 userRoutes.post("/", userController.createUserHandler);
