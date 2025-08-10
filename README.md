@@ -94,6 +94,22 @@ npm run coverage
 ```
 ---
 
+# To run application Client 
+- Go to client folder
+- 
+```bash
+npm i
+npm run dev 
+```
+
+# To run application Server 
+- Go to server folder
+- 
+```bash
+npm i
+npm run dev 
+```
+
 ## Flow Diagram
 
               ┌───────────────────────┐
